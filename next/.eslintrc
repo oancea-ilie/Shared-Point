@@ -1,7 +1,6 @@
 {
   "plugins": [
-    "@typescript-eslint",
-    "prettier"
+    "@typescript-eslint"
   ],
   "extends": [
     "next/core-web-vitals",
@@ -16,16 +15,12 @@
     "no-param-reassign": 0,
     "react/jsx-tag-spacing": 1,
     "react/function-component-definition": 1,
-    "react/jsx-indent": 1,
     "arrow-body-style": 1,
     "react/jsx-no-useless-fragment": 1,
     "implicit-arrow-linebreak": 0,
-    "camelcase": 0,
-    "quotes": 1,
     "react/self-closing-comp": 1,
     "no-trailing-spaces": 1,
     "react/button-has-type": "off",
-    "semi": "off",
     // ? React
     "import/order": 1,
     "react/jsx-filename-extension": [
