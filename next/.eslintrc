@@ -1,6 +1,7 @@
 {
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "prettier"
   ],
   "extends": [
     "next/core-web-vitals",
@@ -8,7 +9,25 @@
     "prettier"
   ],
   "rules": {
+    // ? Best practice rules
+    "no-underscore-dangle": 0,
+    "prefer-destructuring": 1,
+    "no-shadow": "off",
+    "no-param-reassign": 0,
+    "react/jsx-tag-spacing": 1,
+    "react/function-component-definition": 1,
+    "react/jsx-indent": 1,
+    "arrow-body-style": 1,
+    "react/jsx-no-useless-fragment": 1,
+    "implicit-arrow-linebreak": 0,
+    "camelcase": 0,
+    "quotes": 1,
+    "react/self-closing-comp": 1,
+    "no-trailing-spaces": 1,
+    "react/button-has-type": "off",
     "semi": "off",
+    // ? React
+    "import/order": 1,
     "react/jsx-filename-extension": [
       1,
       {
@@ -17,6 +36,35 @@
           ".tsx"
         ]
       }
-    ]
+    ],
+    "react/jsx-boolean-value": 1,
+    "react/jsx-props-no-spreading": 0,
+    "react/jsx-curly-brace-presence": [
+      1,
+      "never"
+    ],
+    "react/no-unescaped-entities": [
+      "error",
+      {
+        "forbid": [
+          ">",
+          "}"
+        ]
+      }
+    ],
+    "react/prop-types": 2,
+    "react/require-default-props": "off",
+    "import/prefer-default-export": 0,
+    "react-hooks/exhaustive-deps": "warn",
+    "import/no-named-as-default": "off",
+    // ? Typescript
+    "@typescript-eslint/no-use-before-define": 2,
+    "@typescript-eslint/type-annotation-spacing": 2,
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    "@typescript-eslint/no-shadow": "error",
+    "@typescript-eslint/semi": "warn",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-unused-vars": "warn"
   }
 }

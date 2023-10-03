@@ -25,7 +25,7 @@
     "sourceType": "module"
   },
   "rules": {
-    // ? Best practice rulesZ
+    // ? Best practice rules
     "no-underscore-dangle": 0,
     "prefer-destructuring": 1,
     "no-shadow": "off",
