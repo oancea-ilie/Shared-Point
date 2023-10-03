@@ -1,0 +1,106 @@
+name: project-name-deploy-production
+run-name: ${{ github.actor }} is performing a Project Name production deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  deploy:
+    runs-on: [self-hosted]
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [18]
+    steps:
+      - name: Workflow started - Microsoft Teams notification
+        uses: Graffino/ms-teams-notification@1.0.0
+        with:
+          github-token: ${{ github.token }}
+          ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_UPDATES }}
+          timezone: Europe/Bucharest
+          notification-summary: 'Client production deployment started'
+        if: always()
+
+      - name: Checkout repository code
+        id: checkout-repository
+        uses: actions/checkout@master
+        with:
+          ref: 'master'
+        if: success()
+
+      - name: Create env file
+        id: create-env
+        uses: nightstory/replace-env@v1
+        env:
+          YOUR_VARIABLE: '${{ secrets.YOUR_VARIABLE }}'
+        with:
+          input_file: .env.prod
+          output_file: .env
+          pattern: double_underscore
+        if: success()
+
+      - name: Check and cache node_modules dependencies
+        id: check-node-modules
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+        if: success()
+
+      - name: Setup node
+        uses: actions/setup-node@v2-beta
+        if: success()
+
+      - name: Yarn install
+        id: yarn-install
+        run: yarn install
+        if: success()
+
+      - name: Yarn lint
+        id: yarn-lint
+        run: yarn lint
+        if: always()
+
+      - name: Yarn build
+        id: yarn-build
+        run: |
+          export NODE_OPTIONS="--max-old-space-size=2048"
+          export CI=false
+          yarn build
+        if: success()
+
+      - name: Deploy
+        id: deploy
+        uses: up9cloud/action-rsync@v1.1
+        env:
+          HOST: project.name.com
+          USER: graffino
+          KEY: ${{secrets.DEPLOY_SSH_KEY}}
+          SSH_ARGS: ' -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+
+          VERBOSE: true
+          ARGS: -carEzhvP --exclude .htpasswd --delete-before
+
+          SOURCE: ./build/
+          TARGET: ~/project.name.com/
+
+          PRE_SCRIPT: |
+            echo "Start at: " $(date -u)
+
+          POST_SCRIPT: |
+            echo "Stop at: " $(date -u)
+        if: success()
+
+      - name: Workflow finished - Microsoft Teams notification
+        uses: Graffino/ms-teams-notification@1.0.0
+        with:
+          github-token: ${{ github.token }}
+          ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_UPDATES }}
+          job: ${{ toJson(job) }}
+          timezone: Europe/Bucharest
+          notification-summary: 'Client production deployment finished with status: ${{ job.status }}'
+        if: always()
