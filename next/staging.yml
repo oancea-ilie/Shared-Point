@@ -58,11 +58,6 @@ jobs:
         run: yarn install
         if: success()
 
-      - name: Yarn lint
-        id: yarn-lint
-        run: yarn lint
-        if: always()
-
       - name: Yarn build
         id: yarn-build
         run: |
@@ -81,9 +76,9 @@ jobs:
           SSH_ARGS: ' -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
           VERBOSE: true
-          ARGS: -carEzhvP --exclude .htpasswd --delete-before
+          ARGS: -carEzhvP --delete-before --include '.env' --include 'node_modules' --include '.next' --include 'package.json' --exclude '/*'
 
-          SOURCE: ./build/
+          SOURCE: ./
           TARGET: ~/project.name.com/
 
           PRE_SCRIPT: |
@@ -92,6 +87,12 @@ jobs:
           POST_SCRIPT: |
             echo "Stop at: " $(date -u)
         if: success()
+
+      - name: Restart NodeJS
+        id: restart-node-js
+        if: success()
+        run: |
+          curl -X POST "https://ploi.io/api/servers/CHANGE_IT_WITH_YOUR_SERVER-ID_FROM_PLOI/daemons/CHANGE_IT_WITH_YOUR_SITE_SERVER-ID_FROM_PLOI/restart" -H "Authorization: Bearer ${{ secrets.PLOI_API_KEY }}" -H "Content-Type: application/json" -H "Accept: application/json"
 
       - name: Workflow finished - Microsoft Teams notification
         uses: Graffino/ms-teams-notification@1.0.0

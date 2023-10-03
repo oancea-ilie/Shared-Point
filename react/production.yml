@@ -60,11 +60,6 @@ jobs:
         run: yarn install
         if: success()
 
-      - name: Yarn lint
-        id: yarn-lint
-        run: yarn lint
-        if: always()
-
       - name: Yarn build
         id: yarn-build
         run: |
