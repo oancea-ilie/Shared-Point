@@ -4,7 +4,7 @@ include .env
 GITHUB_USER = oancea-ilie
 GITHUB_REPO = Shared-Point
 GITHUB_BRANCH = master
-GITHUB_PROJECT_FOLDER = react
+GITHUB_PROJECT_FOLDER = next
 
 # Files
 ESLINT_FILE = .eslintrc
@@ -25,14 +25,12 @@ WORKFLOW_PROD_FILE = production.yml
 WORKFLOW_STAGING_FILE = staging.yml
 
 VS_SETTINGS_FILE = settings.json
-TYPESCRIPT_PATHS_FILE = tsconfig.paths.json
-CRACO_CONFIG_FILE = craco.config.js
 
 GITHUB_REPO_RAW = https://raw.githubusercontent.com/$(GITHUB_USER)/$(GITHUB_REPO)/$(GITHUB_BRANCH)/$(GITHUB_PROJECT_FOLDER)
 
 .PHONY: init-eslint
 init-eslint:
-	yarn add -D eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-react eslint-plugin-react-hooks @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-import-resolver-typescript prettier eslint-plugin-prettier eslint-config-prettier eslint-import-resolver-alias eslint-plugin-unused-imports
+	yarn add -D @typescript-eslint/eslint-plugin prettier eslint eslint-config-prettier eslint-plugin-unused-imports
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -o $(ESLINT_FILE) $(GITHUB_REPO_RAW)/$(ESLINT_FILE)
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -o $(ESLINT_IGNORE_FILE) $(GITHUB_REPO_RAW)/$(ESLINT_IGNORE_FILE);
 
@@ -89,12 +87,3 @@ init-github-workflows:
 	mkdir -p .github/workflows
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -o .github/workflows/$(WORKFLOW_PROD_FILE) $(GITHUB_REPO_RAW)/$(WORKFLOW_PROD_FILE)
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -o .github/workflows/$(WORKFLOW_STAGING_FILE) $(GITHUB_REPO_RAW)/$(WORKFLOW_STAGING_FILE)
-
-.PHONY: init-alias
-init-alias:
-	yarn add @craco/craco
-	npm pkg set scripts.start="craco start"
-	npm pkg set scripts.build="craco build"
-	curl -H "Authorization: token $(GITHUB_TOKEN)" -o $(TYPESCRIPT_PATHS_FILE) $(GITHUB_REPO_RAW)/$(TYPESCRIPT_PATHS_FILE)
-	curl -H "Authorization: token $(GITHUB_TOKEN)" -o $(CRACO_CONFIG_FILE) $(GITHUB_REPO_RAW)/$(CRACO_CONFIG_FILE)
-	awk 'NR==2 {print "\"extends\": \"./tsconfig.paths.json\","} 1' tsconfig.json > temp && mv temp tsconfig.json
