@@ -1,8 +1,8 @@
 /node_modules
-/.next
 /.vscode
 /.github
 /.git
 /.docker
 /.public
+/.husky
 .env*
