@@ -30,7 +30,7 @@ GITHUB_REPO_RAW = https://raw.githubusercontent.com/$(GITHUB_USER)/$(GITHUB_REPO
 
 .PHONY: init-eslint
 init-eslint:
-	yarn add -D @typescript-eslint/eslint-plugin prettier eslint eslint-config-prettier eslint-plugin-unused-imports
+	yarn add -D @typescript-eslint/eslint-plugin prettier eslint eslint-config-prettier
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -o $(ESLINT_FILE) $(GITHUB_REPO_RAW)/$(ESLINT_FILE)
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -o $(ESLINT_IGNORE_FILE) $(GITHUB_REPO_RAW)/$(ESLINT_IGNORE_FILE);
 
